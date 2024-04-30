@@ -4,18 +4,20 @@ import {Button} from "../Button/Button";
 
 export type TodoListPropsType = {
     title: string
+    todolistID: string
     tasks: TaskType[]
-    removeTask: (taskId: string) => void
-    changeFilter: (filterValue: FilterValuesType) => void
-    addTask: (taskTitle: string) => void
-    changeTaskStatus: (taskId: string, taskStatus: boolean) => void
+    removeTask: (taskId: string, todolistID: string) => void
+    changeFilter: (filterValue: FilterValuesType, todolistID: string) => void
+    addTask: (taskTitle: string, todolistID: string) => void
+    changeTaskStatus: (taskId: string, taskStatus: boolean, todolistID: string) => void
     filter: FilterValuesType
+    removeTodolist: (todolistID: string) => void
 }
 
 export const TodoList = ({
-                             title, tasks, removeTask,
+                             title, todolistID, tasks, removeTask,
                              changeFilter, addTask,
-                             changeTaskStatus, filter
+                             changeTaskStatus, filter, removeTodolist
                          }: TodoListPropsType) => {
 
     const [taskTitle, setTaskTitle] = useState<string>("");
@@ -27,7 +29,7 @@ export const TodoList = ({
 
     const addTaskHandler = () => {
         if (taskTitle.trim() !== "") {
-            addTask(taskTitle.trim());
+            addTask(taskTitle.trim(), todolistID);
             setTaskTitle("");
         } else {
             setError("Title is required");
@@ -42,21 +44,28 @@ export const TodoList = ({
     }
 
     const changeFilterTasksHandler = (filterValue: FilterValuesType) => {
-        changeFilter(filterValue);
+        changeFilter(filterValue, todolistID);
     }
 
     const removeTaskHandler = (taskId: string) => {
-        removeTask(taskId);
+        removeTask(taskId, todolistID);
     }
 
     const changeTaskStatusHandler = (taskId: string, status: boolean) => {
-        changeTaskStatus(taskId, status);
+        changeTaskStatus(taskId, status, todolistID);
+    }
+
+    const removeTodolistHandler = () => {
+        removeTodolist(todolistID);
     }
 
 
     return (
         <div>
-            <h3>{title}</h3>
+            <div className={"todolist-title-container"}>
+                <h3>{title}</h3>
+                <Button title={"X"} onClick={removeTodolistHandler}/>
+            </div>
             <div>
                 <input value={taskTitle}
                        className={error ? "error" : ""}
