@@ -1,6 +1,8 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from 'react';
+import React from 'react';
 import {FilterValuesType, TaskType} from "../App";
 import {Button} from "../Button/Button";
+import {AddItemForm} from "../AddItemForm/AddItemForm";
+import {EditableSpan} from "../EditableSpan/EditableSpan";
 
 export type TodoListPropsType = {
     title: string
@@ -10,38 +12,18 @@ export type TodoListPropsType = {
     changeFilter: (filterValue: FilterValuesType, todolistID: string) => void
     addTask: (taskTitle: string, todolistID: string) => void
     changeTaskStatus: (taskId: string, taskStatus: boolean, todolistID: string) => void
+    updateTaskTitle: (todolistID: string, taskID: string, newTitle: string) => void
     filter: FilterValuesType
     removeTodolist: (todolistID: string) => void
+    updateTodolistTitle: (todolistID: string, newTitle: string) => void
 }
 
 export const TodoList = ({
                              title, todolistID, tasks, removeTask,
                              changeFilter, addTask,
-                             changeTaskStatus, filter, removeTodolist
+                             changeTaskStatus, updateTaskTitle, filter,
+                             removeTodolist, updateTodolistTitle
                          }: TodoListPropsType) => {
-
-    const [taskTitle, setTaskTitle] = useState<string>("");
-    const [error, setError] = useState<string | null>(null);
-
-    const onChangeTaskTitleHandler = (event: ChangeEvent<HTMLInputElement>) => {
-        setTaskTitle(event.currentTarget.value);
-    }
-
-    const addTaskHandler = () => {
-        if (taskTitle.trim() !== "") {
-            addTask(taskTitle.trim(), todolistID);
-            setTaskTitle("");
-        } else {
-            setError("Title is required");
-        }
-    }
-
-    const addTaskOnKeyUpHandler = (event: KeyboardEvent<HTMLInputElement>) => {
-        setError(null);
-        if (event.key === "Enter") {
-            addTaskHandler();
-        }
-    }
 
     const changeFilterTasksHandler = (filterValue: FilterValuesType) => {
         changeFilter(filterValue, todolistID);
@@ -59,21 +41,29 @@ export const TodoList = ({
         removeTodolist(todolistID);
     }
 
+    const addTaskCallback = (title: string) => {
+        addTask(title, todolistID);
+    }
+
+    const updateTaskTitleHandler = (taskID: string, newTitle: string) => {
+        updateTaskTitle(todolistID, taskID, newTitle);
+    }
+
+    const updateTodolistTitleHandler = (newTitle: string) => {
+        updateTodolistTitle(todolistID, newTitle);
+    }
+
 
     return (
         <div>
             <div className={"todolist-title-container"}>
-                <h3>{title}</h3>
+                <h3>
+                    <EditableSpan value={title}
+                                  onChange={updateTodolistTitleHandler} />
+                </h3>
                 <Button title={"X"} onClick={removeTodolistHandler}/>
             </div>
-            <div>
-                <input value={taskTitle}
-                       className={error ? "error" : ""}
-                       onChange={onChangeTaskTitleHandler}
-                       onKeyUp={addTaskOnKeyUpHandler}/>
-                <Button title={"+"} onClick={addTaskHandler}/>
-                {error && <div className={"error-message"}>{error}</div>}
-            </div>
+            <AddItemForm addItem={addTaskCallback}/>
             {tasks.length === 0 ? (
                 <p>there are no tasks</p>
             ) : (
@@ -85,7 +75,8 @@ export const TodoList = ({
                                        onChange={(event) => changeTaskStatusHandler(task.id,
                                            event.currentTarget.checked)}
                                        checked={task.isDone}/>
-                                <span>{task.title}</span>
+                                <EditableSpan value={task.title}
+                                              onChange={(newTitle) => updateTaskTitleHandler(task.id, newTitle)}/>
                                 <Button title={"X"} onClick={() => removeTaskHandler(task.id)}/>
                             </li>
                         )
