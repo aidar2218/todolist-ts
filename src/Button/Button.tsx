@@ -14,4 +14,3 @@ export const Button = ({title, onClick, className}: ButtonPropsType) => {
             {title}
         </button>)
 };
-
