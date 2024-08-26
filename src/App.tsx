@@ -82,10 +82,10 @@ const App = () => {
     });
 
 
-    const removeTask = (taskId: string, todolistID: string) => {
+    const removeTask = (taskID: string, todolistID: string) => {
         setTasks({
             ...tasks,
-            [todolistID]: tasks[todolistID].filter(t => t.id !== taskId),
+            [todolistID]: tasks[todolistID].filter(t => t.id !== taskID),
         });
     };
 
@@ -105,10 +105,10 @@ const App = () => {
         setTodoLists(newTodolist);
     };
 
-    const changeTaskStatus = (taskId: string, taskStatus: boolean, todolistID: string) => {
+    const changeTaskStatus = (taskID: string, taskStatus: boolean, todolistID: string) => {
         setTasks({
             ...tasks,
-            [todolistID]: tasks[todolistID].map(t => (t.id === taskId
+            [todolistID]: tasks[todolistID].map(t => (t.id === taskID
                 ? {...t, isDone: taskStatus}
                 : t)),
         })
@@ -131,7 +131,7 @@ const App = () => {
         setTasks({[todolistID]: [], ...tasks});
     }
 
-    const updateTaskTitle = (todolistID: string,
+    const changeTaskTitle = (todolistID: string,
                              taskID: string, newTitle: string) => {
         const newTodolistTasks = {
             ...tasks,
@@ -201,7 +201,7 @@ const App = () => {
                                               changeFilter={changeFilter}
                                               addTask={addTask}
                                               changeTaskStatus={changeTaskStatus}
-                                              updateTaskTitle={updateTaskTitle}
+                                              updateTaskTitle={changeTaskTitle}
                                               filter={tl.filter}
                                               removeTodolist={removeTodolist}
                                               updateTodolistTitle={updateTodolistTitle}
