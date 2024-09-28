@@ -1,5 +1,5 @@
 import React from 'react';
-import {FilterValuesType, TaskType} from "../App";
+import {FilterValuesType, TaskType} from "../../app/App";
 import {AddItemForm} from "../AddItemForm/AddItemForm";
 import {EditableSpan} from "../EditableSpan/EditableSpan";
 import IconButton from '@mui/material/IconButton'
@@ -15,11 +15,11 @@ export type TodoListPropsType = {
     title: string
     todolistID: string
     tasks: TaskType[]
-    removeTask: (taskId: string, todolistID: string) => void
-    changeFilter: (filterValue: FilterValuesType, todolistID: string) => void
-    addTask: (taskTitle: string, todolistID: string) => void
-    changeTaskStatus: (taskId: string, taskStatus: boolean, todolistID: string) => void
-    updateTaskTitle: (todolistID: string, taskID: string, newTitle: string) => void
+    removeTask: (todolistID: string, taskId: string) => void
+    changeFilter: (todolistID: string, filterValue: FilterValuesType) => void
+    addTask: (todolistID: string, taskTitle: string) => void
+    changeTaskStatus: (todolistID: string, taskId: string, taskStatus: boolean) => void
+    changeTaskTitle: (todolistID: string, taskID: string, newTitle: string) => void
     filter: FilterValuesType
     removeTodolist: (todolistID: string) => void
     updateTodolistTitle: (todolistID: string, newTitle: string) => void
@@ -28,20 +28,20 @@ export type TodoListPropsType = {
 export const TodoList = ({
                              title, todolistID, tasks, removeTask,
                              changeFilter, addTask,
-                             changeTaskStatus, updateTaskTitle, filter,
+                             changeTaskStatus, changeTaskTitle, filter,
                              removeTodolist, updateTodolistTitle
                          }: TodoListPropsType) => {
 
     const changeFilterTasksHandler = (filterValue: FilterValuesType) => {
-        changeFilter(filterValue, todolistID);
+        changeFilter(todolistID, filterValue);
     }
 
     const removeTaskHandler = (taskId: string) => {
-        removeTask(taskId, todolistID);
+        removeTask(todolistID, taskId);
     }
 
     const changeTaskStatusHandler = (taskId: string, status: boolean) => {
-        changeTaskStatus(taskId, status, todolistID);
+        changeTaskStatus(todolistID, taskId, status);
     }
 
     const removeTodolistHandler = () => {
@@ -49,11 +49,11 @@ export const TodoList = ({
     }
 
     const addTaskCallback = (title: string) => {
-        addTask(title, todolistID);
+        addTask(todolistID, title);
     }
 
     const updateTaskTitleHandler = (taskID: string, newTitle: string) => {
-        updateTaskTitle(todolistID, taskID, newTitle);
+        changeTaskTitle(todolistID, taskID, newTitle);
     }
 
     const updateTodolistTitleHandler = (newTitle: string) => {

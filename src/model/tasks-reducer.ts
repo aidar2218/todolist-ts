@@ -1,4 +1,4 @@
-import {TasksStateType, TaskType} from "../App";
+import {TasksStateType, TaskType} from "../app/App";
 import {v1} from "uuid";
 import {AddTodolistActionType, RemoveTodolistActionType} from "./todolists-reducer";
 
@@ -44,8 +44,12 @@ type ActionsType = RemoveTaskActionType
     | AddTodolistActionType
     | RemoveTodolistActionType;
 
+const initialState: TasksStateType = {};
 
-export const tasksReducer = (state: TasksStateType, action: ActionsType): TasksStateType => {
+
+export const tasksReducer = (
+    state: TasksStateType = initialState,
+    action: ActionsType): TasksStateType => {
     switch (action.type) {
         case "REMOVE-TASK": {
             const newTodolist = state[action.payload.todolistID].filter(task =>
@@ -100,16 +104,16 @@ export const tasksReducer = (state: TasksStateType, action: ActionsType): TasksS
             return {...state};
         }
         default: {
-            throw new Error("Unknown action type");
+            return state;
         }
     }
 };
 
-export const removeTaskAC = (taskID: string, todolistID: string): RemoveTaskActionType => {
+export const removeTaskAC = (todolistID: string, taskID: string): RemoveTaskActionType => {
     return {type: "REMOVE-TASK", payload: {todolistID, taskID}} as const;
 };
 
-export const addTaskAC = (taskTitle: string, todolistID: string): AddTaskActionType => {
+export const addTaskAC = (todolistID: string, taskTitle: string): AddTaskActionType => {
     return {type: "ADD-TASK", payload: {todolistID, taskTitle}} as const;
 };
 
