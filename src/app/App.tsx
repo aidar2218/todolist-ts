@@ -45,8 +45,6 @@ type ThemeMode = "light" | "dark"
 
 const App = () => {
 
-
-
     const todoLists = useSelector<RootState, TodolistType[]>(state => state.todoLists);
     const tasks = useSelector<RootState, TasksStateType>(state => state.tasks);
 
